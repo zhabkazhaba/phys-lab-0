@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.26)
 project(phys-lab-0)
 find_package(OpenGL REQUIRED)
 
-include_directories("/usr/include/SDL2")
-
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(lib)
