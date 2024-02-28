@@ -10,19 +10,19 @@
 
 class Window {
 private:
-    constexpr static float PI = 3.14159265358979323846f;
+    constexpr static float PI        = 3.14159265358979323846f;
     constexpr static float INS_ERROR = 0.05f;
 
     enum INF_TYPE {
-        INF = 0,
+        INF     = 0,
         SUCCESS = 1,
-        ERR = 2
+        ERR     = 2
     };
 
     const static inline ImVec4 colors[] = {
-            ImVec4(1.0f, 1.0f, 1.0f, 1.0f),
-            ImVec4(0.0f, 1.0f, 0.0f, 1.0f),
-            ImVec4(1.0f, 0.0f, 0.0f, 1.0f)
+            ImVec4(1.0f, 1.0f, 1.0f, 1.0f), // WHITE
+            ImVec4(0.0f, 1.0f, 0.0f, 1.0f), // GREEN
+            ImVec4(1.0f, 0.0f, 0.0f, 1.0f)  // RED
     };
 
     const static inline float available_probabilities[] = {0.68f, 0.95f};
@@ -64,17 +64,23 @@ private:
     float surface_err;
 
     // Utility variables
-    bool is_modified;
-    int prob_choice;
+    bool        is_modified;
+    int         prob_choice;
     std::string curr_message;
-    ImVec4 curr_color;
-    bool check_mode;
+    ImVec4      curr_color;
+    bool        check_mode;
 public:
     Window();
     Window(const Window&) = delete;
     ~Window();
     int run_window();
+    /**
+     * @brief Calculates values for task 1, such as deviation, sq. deviation, conf. interval and so on
+     */
     void calculate_tests();
+    /**
+     * @brief Calculates values for task 2, such as volume and surface of a cylinder, as well as error values
+     */
     void calculate_tests_t2();
     void send_message(const std::string &message, INF_TYPE color);
 };

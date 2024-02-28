@@ -1,28 +1,18 @@
-//
-// Created by zhabkazhaba on 2/27/24.
-//
-
 #include <numeric>
 #include <cstdlib>
 #include <complex>
 #include "window.h"
 
 Window::Window() {
+    // Initializing task 1 variables
     num_of_tests = 0;
-    av_diameter = 0.0f;
-    av_deviation = 0.0f;
-    av_square_deviation = 0.0f;
-    std_conf_interval = 0.0f;
-    conf_interval = 0.0f;
+    av_diameter = av_deviation = av_square_deviation = std_conf_interval = conf_interval = 0.0f;
 
+    // Initializing task 2 variables
     num_of_tests_t2 = 0;
-    av_diameter_t2 = 0.0f;
-    av_height_t2 = 0.0f;
-    volume = 0.0f;
-    volume_err = 0.0f;
-    surface = 0.0f;
-    surface_err = 0.0f;
+    av_diameter_t2 = av_height_t2 = volume = volume_err = surface = surface_err = 0.0f;
 
+    // Initializing utility variables
     is_modified = false;
     prob_choice = 0;
     curr_message = "Welcome!";
@@ -35,7 +25,7 @@ Window::~Window() {
 }
 
 int Window::run_window() {
-    // Initialize GLFW
+    // Initializing GLFW
     if (!glfwInit())
         return 1;
 
@@ -59,7 +49,7 @@ int Window::run_window() {
     float diameter_tmp = 0.0f;
     float height_tmp = 0.0f;
 
-    // Main loop
+    // Main window loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
@@ -67,7 +57,9 @@ int Window::run_window() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Your ImGui code here
+        /*<----------------------------------->*/
+        // === Input window for Task 1 and Task 2 ===
+        // Measuring diameter/height of cylinder
         ImGui::SetNextWindowPos(ImVec2(50, 100));
         ImGui::SetNextWindowSize(ImVec2(400,400));
         ImGui::Begin("Input");
@@ -102,7 +94,9 @@ int Window::run_window() {
         ImGui::End();
 
         /*<----------------------------------->*/
-        ImGui::SetNextWindowPos(ImVec2(750, 100));
+        // === Display window for Task 1 and Task 2 ===
+        // Calculating volume, surface of cylinder, errors of measuring
+        ImGui::SetNextWindowPos(ImVec2(750, 100));Calculating volume and surface of cylinder
         ImGui::SetNextWindowSize(ImVec2(400,400));
         ImGui::Begin("Display");
         if (ImGui::CollapsingHeader("Table")) {
@@ -138,14 +132,14 @@ int Window::run_window() {
                 }
             }
             ImGui::Text("N: %d", num_of_tests);
-            ImGui::Text("<D>: %f", av_diameter);
-            ImGui::Text("<delta D>: %f", av_deviation);
-            ImGui::Text("S_n: %f", av_square_deviation);
-            ImGui::Text("S\'_n: %f", std_conf_interval);
-            ImGui::Text("delta D_np: %f", conf_interval);
+            ImGui::Text("<D>: %f mm", av_diameter);
+            ImGui::Text("<delta D>: %f mm", av_deviation);
+            ImGui::Text("S_n: %f mm^2", av_square_deviation);
+            ImGui::Text("S\'_n: %f mm", std_conf_interval);
+            ImGui::Text("delta D_np: %f mm", conf_interval);
             ImGui::Text("Student coefficient: %f", REDUCED_T_MAP.at({5, available_probabilities[prob_choice]})); //TODO: fix this
             ImGui::Spacing();
-            ImGui::Text("D = %f +- %f; n = %d, p = %f, E = %f %%",
+            ImGui::Text("D = %f +- %f mm; n = %d, p = %f, E = %f %%",
                         av_diameter, conf_interval, num_of_tests, available_probabilities[prob_choice], conf_interval/av_diameter*100);
         }
 
@@ -161,13 +155,17 @@ int Window::run_window() {
             ImGui::Text("N: %d", num_of_tests_t2);
             ImGui::Text("<D>: %f", av_diameter_t2);
             ImGui::Text("<H>: %f", av_height_t2);
-            ImGui::Text("D = %f +- %f; H = %f +- %f", av_diameter_t2, INS_ERROR, av_height_t2, INS_ERROR);
-            ImGui::Text("V = %f +- %f, E = %f", volume, volume * volume_err, volume_err * 100);
-            ImGui::Text("S = %f +- %f, E = %f", surface, surface * surface_err, surface_err * 100);
+            ImGui::Spacing();
+            ImGui::Text("D = %f +- %f mm; H = %f +- %f", av_diameter_t2, INS_ERROR, av_height_t2, INS_ERROR);
+            ImGui::Spacing();
+            ImGui::Text("V = %f +- %f mm^3, E = %f", volume, volume * volume_err, volume_err * 100);
+            ImGui::Spacing();
+            ImGui::Text("S = %f +- %f mm^2, E = %f", surface, surface * surface_err, surface_err * 100);
         }
         ImGui::End();
 
         /*<----------------------------------->*/
+        // === Dynamic message window ===
         ImGui::SetNextWindowPos(ImVec2(450, 420));
         ImGui::SetNextWindowSize(ImVec2(300,80));
         ImGui::Begin("Message");
@@ -175,6 +173,7 @@ int Window::run_window() {
         ImGui::End();
 
         /*<----------------------------------->*/
+        // === Basic instructions window ===
         ImGui::SetNextWindowPos(ImVec2(450, 100));
         ImGui::SetNextWindowSize(ImVec2(300, 320));
         ImGui::Begin("Guide");
